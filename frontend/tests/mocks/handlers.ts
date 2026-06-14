@@ -27,4 +27,15 @@ export const handlers = [
   http.get('/api/owner', () => HttpResponse.json(owner)),
 
   http.get('/api/event-types', () => HttpResponse.json(eventTypes)),
+
+  http.get('/api/event-types/:id', ({ params }) => {
+    const et = eventTypes.find((e) => e.id === Number(params.id));
+    if (!et) {
+      return HttpResponse.json(
+        { code: 'event_type_not_found', message: 'Тип события не найден' },
+        { status: 404 },
+      );
+    }
+    return HttpResponse.json(et);
+  }),
 ];
