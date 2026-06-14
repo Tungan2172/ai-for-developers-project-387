@@ -58,7 +58,9 @@ export const owner = {
   description: 'Забронируйте встречу в удобное время.',
 };
 
-export const eventTypes = [
+let nextEventTypeId = 3;
+
+export const eventTypes: components['schemas']['EventType'][] = [
   {
     id: 1,
     title: '15-минутная встреча',
@@ -81,8 +83,8 @@ export const bookings: components['schemas']['Booking'][] = [
     eventTypeId: 1,
     eventTypeTitle: '15-минутная встреча',
     durationMinutes: 15,
-    start: '2026-06-16T09:00:00.000Z',
-    end: '2026-06-16T09:15:00.000Z',
+    start: '2026-06-10T09:00:00.000Z',
+    end: '2026-06-10T09:15:00.000Z',
     guestName: 'Анна',
     guestEmail: 'anna@test.com',
     createdAt: '2026-06-14T20:00:00.000Z',
@@ -92,8 +94,8 @@ export const bookings: components['schemas']['Booking'][] = [
     eventTypeId: 2,
     eventTypeTitle: 'Часовая консультация',
     durationMinutes: 60,
-    start: '2026-06-17T10:00:00.000Z',
-    end: '2026-06-17T11:00:00.000Z',
+    start: '2026-06-11T10:00:00.000Z',
+    end: '2026-06-11T11:00:00.000Z',
     guestName: 'Борис',
     guestEmail: 'boris@test.com',
     note: 'Обсудить архитектуру',
@@ -129,6 +131,62 @@ export const handlers = [
     }
     const slots = generateSlots(et.durationMinutes);
     return HttpResponse.json(slots);
+  }),
+
+  http.post('/api/event-types', async ({ request }) => {
+    const body = (await request.json()) as components['schemas']['EventTypeCreate'];
+    if (!body.title || !body.description || !body.durationMinutes) {
+      return HttpResponse.json(
+        { code: 'validation_error', message: 'Все поля обязательны' },
+        { status: 422 },
+      );
+    }
+    const id = nextEventTypeId++;
+    const created: components['schemas']['EventType'] = {
+      id,
+      title: body.title,
+      description: body.description,
+      durationMinutes: body.durationMinutes,
+    };
+    eventTypes.push(created);
+    return HttpResponse.json(created, { status: 201 });
+  }),
+
+  http.patch('/api/event-types/:id', async ({ params, request }) => {
+    const et = eventTypes.find((e) => e.id === Number(params.id));
+    if (!et) {
+      return HttpResponse.json(
+        { code: 'event_type_not_found', message: 'Тип события не найден' },
+        { status: 404 },
+      );
+    }
+    const body = (await request.json()) as components['schemas']['EventTypeUpdate'];
+    if (body.title !== undefined) et.title = body.title;
+    if (body.description !== undefined) et.description = body.description;
+    if (body.durationMinutes !== undefined) et.durationMinutes = body.durationMinutes;
+    return HttpResponse.json(et);
+  }),
+
+  http.delete('/api/event-types/:id', ({ params }) => {
+    const idx = eventTypes.findIndex((e) => e.id === Number(params.id));
+    if (idx === -1) {
+      return HttpResponse.json(
+        { code: 'event_type_not_found', message: 'Тип события не найден' },
+        { status: 404 },
+      );
+    }
+    const et = eventTypes[idx];
+    const hasFutureBookings = bookings.some(
+      (b) => b.eventTypeId === et.id && new Date(b.start) > new Date(),
+    );
+    if (hasFutureBookings) {
+      return HttpResponse.json(
+        { code: 'slot_busy', message: 'Нельзя удалить тип события с предстоящими бронями' },
+        { status: 409 },
+      );
+    }
+    eventTypes.splice(idx, 1);
+    return new HttpResponse(null, { status: 204 });
   }),
 
   http.get('/api/bookings', () => HttpResponse.json(bookings)),
