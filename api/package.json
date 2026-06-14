@@ -8,6 +8,7 @@
     "watch": "tsp compile . --watch"
   },
   "devDependencies": {
+    "@stoplight/prism-cli": "^5.14.2",
     "@typespec/compiler": "latest",
     "@typespec/http": "latest",
     "@typespec/openapi": "latest",
