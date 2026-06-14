@@ -3,9 +3,10 @@ import { Calendar } from '@mantine/dates';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 
 import { client } from '../api/client.ts';
+import { useRoleContext } from '../RoleContext.tsx';
 import type { components } from '../api/schema.d.ts';
 
 type Slot = components['schemas']['Slot'];
@@ -19,6 +20,7 @@ function isSameDay(a: dayjs.Dayjs, b: dayjs.Dayjs) {
 }
 
 export function BookSlot() {
+  const { isAdmin } = useRoleContext();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const eventTypeId = Number(id);
@@ -35,6 +37,8 @@ export function BookSlot() {
     queryFn: () => client.GET('/event-types/{id}', { params: { path: { id: eventTypeId } } }),
     enabled: !Number.isNaN(eventTypeId),
   });
+
+  if (isAdmin) return <Navigate to="/" replace />;
 
   if (Number.isNaN(eventTypeId)) {
     return (

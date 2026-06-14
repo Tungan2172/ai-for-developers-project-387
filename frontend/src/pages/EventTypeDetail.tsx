@@ -3,8 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router';
 
 import { client } from '../api/client.ts';
+import { useRoleContext } from '../RoleContext.tsx';
 
 export function EventTypeDetail() {
+  const { isAdmin } = useRoleContext();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const eventTypeId = Number(id);
@@ -61,15 +63,17 @@ export function EventTypeDetail() {
 
         <Text>{eventType.description}</Text>
 
-        <Button
-          size="lg"
-          fullWidth
-          onClick={() => {
-            void navigate(`/event-types/${String(eventType.id)}/book`);
-          }}
-        >
-          Забронировать
-        </Button>
+        {!isAdmin && (
+          <Button
+            size="lg"
+            fullWidth
+            onClick={() => {
+              void navigate(`/event-types/${String(eventType.id)}/book`);
+            }}
+          >
+            Забронировать
+          </Button>
+        )}
       </Stack>
     </Container>
   );

@@ -12,20 +12,21 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 
 import { client } from '../api/client.ts';
+import { useRoleContext } from '../RoleContext.tsx';
 import type { components } from '../api/schema.d.ts';
 
 type BookingCreate = components['schemas']['BookingCreate'];
 
 export function BookingForm() {
+  const { isAdmin } = useRoleContext();
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const eventTypeId = Number(id);
   const startIso = searchParams.get('start') ?? '';
-
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
   const [note, setNote] = useState('');
@@ -44,6 +45,8 @@ export function BookingForm() {
       );
     },
   });
+
+  if (isAdmin) return <Navigate to="/" replace />;
 
   if (searchParams.get('success') === '1') {
     return (

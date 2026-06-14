@@ -5,6 +5,7 @@ import { type PropsWithChildren } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { describe, expect, it } from 'vitest';
 
+import { RoleProvider } from '../src/RoleContext.tsx';
 import { EventTypeDetail } from '../src/pages/EventTypeDetail.tsx';
 import { eventTypes } from './mocks/handlers.ts';
 
@@ -16,7 +17,11 @@ function renderWithRouter(initialEntry: string) {
   function Providers({ children }: PropsWithChildren) {
     return (
       <QueryClientProvider client={queryClient}>
-        <MantineProvider>{children}</MantineProvider>
+        <MantineProvider>
+          <RoleProvider>
+            {children}
+          </RoleProvider>
+        </MantineProvider>
       </QueryClientProvider>
     );
   }

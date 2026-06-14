@@ -1,9 +1,19 @@
 import { Anchor, AppShell, Group, Switch } from '@mantine/core';
-import { useState } from 'react';
-import { Link, Outlet } from 'react-router';
+import { useEffect } from 'react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router';
+
+import { useRoleContext } from './RoleContext.tsx';
 
 export function AppLayout() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { isAdmin, setIsAdmin } = useRoleContext();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!isAdmin && location.pathname.startsWith('/admin/')) {
+      void navigate('/');
+    }
+  }, [isAdmin, location.pathname, navigate]);
 
   return (
     <AppShell header={{ height: 50 }} padding="md">

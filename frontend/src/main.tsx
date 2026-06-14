@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { RoleProvider } from './RoleContext.tsx';
 import { Router } from './router.tsx';
 
 import '@mantine/core/styles.css';
@@ -25,7 +26,9 @@ async function start() {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <MantineProvider>
-          <Router />
+          <RoleProvider>
+            <Router />
+          </RoleProvider>
         </MantineProvider>
       </QueryClientProvider>
     </StrictMode>,
