@@ -71,6 +71,8 @@ export const eventTypes = [
   },
 ];
 
+let nextBookingId = 1;
+
 export const handlers = [
   http.get('/api/health', () => HttpResponse.json({ status: 'ok' })),
 
@@ -99,5 +101,50 @@ export const handlers = [
     }
     const slots = generateSlots(et.durationMinutes);
     return HttpResponse.json(slots);
+  }),
+
+  http.post('/api/bookings', async ({ request }) => {
+    const body = (await request.json()) as {
+      eventTypeId: number;
+      start: string;
+      guestName: string;
+      guestEmail: string;
+      note?: string;
+    };
+
+    if (!body.guestName || !body.guestEmail) {
+      return HttpResponse.json(
+        { code: 'validation_error', message: 'Имя и email обязательны' },
+        { status: 422 },
+      );
+    }
+
+    const et = eventTypes.find((e) => e.id === body.eventTypeId);
+    if (!et) {
+      return HttpResponse.json(
+        { code: 'event_type_not_found', message: 'Тип события не найден' },
+        { status: 404 },
+      );
+    }
+
+    const slotStart = dayjs(body.start);
+    const slotEnd = slotStart.add(et.durationMinutes, 'minute');
+    const id = nextBookingId++;
+
+    return HttpResponse.json(
+      {
+        id,
+        eventTypeId: et.id,
+        eventTypeTitle: et.title,
+        durationMinutes: et.durationMinutes,
+        start: slotStart.toISOString(),
+        end: slotEnd.toISOString(),
+        guestName: body.guestName,
+        guestEmail: body.guestEmail,
+        note: body.note ?? null,
+        createdAt: dayjs().toISOString(),
+      },
+      { status: 201 },
+    );
   }),
 ];

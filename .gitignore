@@ -35,3 +35,9 @@ frontend/dist/
 .idea/
 .vscode/
 .DS_Store
+
+# opencode
+.opencode/
+
+# Session history
+session-course_calendar.md

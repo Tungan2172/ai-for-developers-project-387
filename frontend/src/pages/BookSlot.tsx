@@ -3,7 +3,7 @@ import { Calendar } from '@mantine/dates';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import { client } from '../api/client.ts';
 import type { components } from '../api/schema.d.ts';
@@ -20,6 +20,7 @@ function isSameDay(a: dayjs.Dayjs, b: dayjs.Dayjs) {
 
 export function BookSlot() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const eventTypeId = Number(id);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
@@ -118,6 +119,15 @@ export function BookSlot() {
                 color={slot.status === 'free' ? 'blue' : 'gray'}
                 disabled={slot.status === 'busy'}
                 fullWidth
+                onClick={
+                  slot.status === 'free'
+                    ? () => {
+                        void navigate(
+                          `/event-types/${String(eventTypeId)}/book/confirm?start=${encodeURIComponent(slot.start)}`,
+                        );
+                      }
+                    : undefined
+                }
               >
                 {formatTime(slot.start)}–{formatTime(slot.end)}
               </Button>
