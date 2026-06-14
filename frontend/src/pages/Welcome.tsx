@@ -3,8 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
 import { client } from '../api/client.ts';
+import { useRoleContext } from '../RoleContext.tsx';
 
 export function Welcome() {
+  const { isAdmin } = useRoleContext();
   const navigate = useNavigate();
   const ownerQuery = useQuery({
     queryKey: ['owner'],
@@ -42,10 +44,14 @@ export function Welcome() {
                 padding="lg"
                 radius="md"
                 withBorder
-                onClick={() => {
-                  void navigate(`/event-types/${String(et.id)}`);
-                }}
-                style={{ cursor: 'pointer' }}
+                onClick={
+                  isAdmin
+                    ? undefined
+                    : () => {
+                        void navigate(`/event-types/${String(et.id)}`);
+                      }
+                }
+                style={{ cursor: isAdmin ? 'default' : 'pointer' }}
               >
                 <Group justify="space-between" mb="xs">
                   <Title order={3}>{et.title}</Title>

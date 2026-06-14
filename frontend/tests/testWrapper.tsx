@@ -3,7 +3,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { PropsWithChildren } from 'react';
 import { MemoryRouter } from 'react-router';
 
-export function createTestWrapper(initialEntries?: string[]) {
+import { RoleProvider } from '../src/RoleContext.tsx';
+
+export function createTestWrapper(initialEntries?: string[], initialAdmin = false) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: { retry: false },
@@ -14,7 +16,9 @@ export function createTestWrapper(initialEntries?: string[]) {
     return (
       <MemoryRouter initialEntries={initialEntries}>
         <QueryClientProvider client={queryClient}>
-          <MantineProvider>{children}</MantineProvider>
+          <MantineProvider>
+            <RoleProvider initialAdmin={initialAdmin}>{children}</RoleProvider>
+          </MantineProvider>
         </QueryClientProvider>
       </MemoryRouter>
     );
