@@ -1,8 +1,9 @@
-export function App() {
+import { Outlet } from 'react-router';
+
+export function AppLayout() {
   return (
     <main>
-      <h1>Calendar</h1>
-      <p>Скелет приложения. Экраны добавляются на этапах F-welcome…F5.</p>
+      <Outlet />
     </main>
   );
 }

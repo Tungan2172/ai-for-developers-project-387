@@ -1,11 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { App } from './App.tsx';
+import { createTestWrapper } from './testWrapper.tsx';
+import { Welcome } from '../src/pages/Welcome.tsx';
 
 describe('App', () => {
   it('отображает заголовок приложения', () => {
-    render(<App />);
+    render(<Welcome />, { wrapper: createTestWrapper() });
 
     expect(screen.getByRole('heading', { name: 'Calendar' })).toBeInTheDocument();
   });
