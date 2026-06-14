@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
+import { AdminBookings } from './pages/AdminBookings.tsx';
 import { AppLayout } from './App.tsx';
 import { BookingForm } from './pages/BookingForm.tsx';
 import { BookSlot } from './pages/BookSlot.tsx';
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
       { path: '/event-types/:id', element: <EventTypeDetail /> },
       { path: '/event-types/:id/book', element: <BookSlot /> },
       { path: '/event-types/:id/book/confirm', element: <BookingForm /> },
+      { path: '/admin/bookings', element: <AdminBookings /> },
     ],
   },
 ]);
