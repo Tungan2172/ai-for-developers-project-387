@@ -6,6 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { Router } from './router.tsx';
 
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 
 async function start() {
   if (import.meta.env.DEV) {
