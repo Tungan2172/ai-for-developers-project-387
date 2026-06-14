@@ -20,18 +20,26 @@ export function AppLayout() {
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
           <Group>
-            <Anchor component={Link} to="/">Главная</Anchor>
+            <Anchor component={Link} to="/">
+              Главная
+            </Anchor>
             {isAdmin && (
               <>
-                <Anchor component={Link} to="/admin/bookings">Брони</Anchor>
-                <Anchor component={Link} to="/admin/event-types">Типы событий</Anchor>
+                <Anchor component={Link} to="/admin/bookings">
+                  Брони
+                </Anchor>
+                <Anchor component={Link} to="/admin/event-types">
+                  Типы событий
+                </Anchor>
               </>
             )}
           </Group>
           <Switch
             label="Режим владельца"
             checked={isAdmin}
-            onChange={(e) => { setIsAdmin(e.currentTarget.checked); }}
+            onChange={(e) => {
+              setIsAdmin(e.currentTarget.checked);
+            }}
           />
         </Group>
       </AppShell.Header>

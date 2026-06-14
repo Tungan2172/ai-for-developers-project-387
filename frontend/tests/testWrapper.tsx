@@ -17,9 +17,7 @@ export function createTestWrapper(initialEntries?: string[], initialAdmin = fals
       <MemoryRouter initialEntries={initialEntries}>
         <QueryClientProvider client={queryClient}>
           <MantineProvider>
-            <RoleProvider initialAdmin={initialAdmin}>
-              {children}
-            </RoleProvider>
+            <RoleProvider initialAdmin={initialAdmin}>{children}</RoleProvider>
           </MantineProvider>
         </QueryClientProvider>
       </MemoryRouter>

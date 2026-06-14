@@ -44,7 +44,13 @@ export function Welcome() {
                 padding="lg"
                 radius="md"
                 withBorder
-                onClick={isAdmin ? undefined : () => { void navigate(`/event-types/${String(et.id)}`); }}
+                onClick={
+                  isAdmin
+                    ? undefined
+                    : () => {
+                        void navigate(`/event-types/${String(et.id)}`);
+                      }
+                }
                 style={{ cursor: isAdmin ? 'default' : 'pointer' }}
               >
                 <Group justify="space-between" mb="xs">

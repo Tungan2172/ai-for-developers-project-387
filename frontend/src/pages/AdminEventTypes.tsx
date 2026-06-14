@@ -44,7 +44,11 @@ function formToUpdate(f: FormState): EventTypeUpdate {
 }
 
 function eventTypeToForm(et: EventType): FormState {
-  return { title: et.title, description: et.description, durationMinutes: String(et.durationMinutes) };
+  return {
+    title: et.title,
+    description: et.description,
+    durationMinutes: String(et.durationMinutes),
+  };
 }
 
 export function AdminEventTypes() {
@@ -85,8 +89,7 @@ export function AdminEventTypes() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) =>
-      client.DELETE('/event-types/{id}', { params: { path: { id } } }),
+    mutationFn: (id: number) => client.DELETE('/event-types/{id}', { params: { path: { id } } }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['event-types'] });
     },
@@ -143,7 +146,8 @@ export function AdminEventTypes() {
     );
   }
 
-  const errorMessage = eventTypesQuery.error instanceof Error ? eventTypesQuery.error.message : null;
+  const errorMessage =
+    eventTypesQuery.error instanceof Error ? eventTypesQuery.error.message : null;
   if (errorMessage) {
     return (
       <Container size="md" py="xl">
@@ -183,14 +187,22 @@ export function AdminEventTypes() {
                   <Table.Td>{et.durationMinutes} мин</Table.Td>
                   <Table.Td>
                     <Group gap="xs">
-                      <Button size="xs" variant="light" onClick={() => { openEdit(et); }}>
+                      <Button
+                        size="xs"
+                        variant="light"
+                        onClick={() => {
+                          openEdit(et);
+                        }}
+                      >
                         Редактировать
                       </Button>
                       <Button
                         size="xs"
                         color="red"
                         loading={deleteMutation.isPending}
-                        onClick={() => { deleteMutation.mutate(et.id); }}
+                        onClick={() => {
+                          deleteMutation.mutate(et.id);
+                        }}
                       >
                         Удалить
                       </Button>
@@ -205,7 +217,9 @@ export function AdminEventTypes() {
         {showForm ? (
           <Card withBorder shadow="sm" padding="lg" radius="md">
             <Stack gap="md">
-              <Title order={3}>{isEditing ? 'Редактировать тип события' : 'Создать тип события'}</Title>
+              <Title order={3}>
+                {isEditing ? 'Редактировать тип события' : 'Создать тип события'}
+              </Title>
 
               {apiError ? <Alert color="red">{apiError}</Alert> : null}
 
@@ -213,14 +227,18 @@ export function AdminEventTypes() {
                 label="Название"
                 required
                 value={form.title}
-                onChange={(e) => { setForm({ ...form, title: e.currentTarget.value }); }}
+                onChange={(e) => {
+                  setForm({ ...form, title: e.currentTarget.value });
+                }}
               />
 
               <Textarea
                 label="Описание"
                 required
                 value={form.description}
-                onChange={(e) => { setForm({ ...form, description: e.currentTarget.value }); }}
+                onChange={(e) => {
+                  setForm({ ...form, description: e.currentTarget.value });
+                }}
               />
 
               <NumberInput
@@ -229,14 +247,18 @@ export function AdminEventTypes() {
                 min={1}
                 max={480}
                 value={form.durationMinutes ? Number(form.durationMinutes) : ''}
-                onChange={(v) => { setForm({ ...form, durationMinutes: v === '' ? '' : String(v) }); }}
+                onChange={(v) => {
+                  setForm({ ...form, durationMinutes: v === '' ? '' : String(v) });
+                }}
               />
 
               <Group>
                 <Button loading={isMutating} onClick={handleSave}>
                   {isEditing ? 'Сохранить' : 'Создать'}
                 </Button>
-                <Button variant="light" onClick={closeForm}>Отмена</Button>
+                <Button variant="light" onClick={closeForm}>
+                  Отмена
+                </Button>
               </Group>
             </Stack>
           </Card>

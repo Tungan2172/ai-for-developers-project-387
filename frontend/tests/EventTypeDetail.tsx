@@ -18,9 +18,7 @@ function renderWithRouter(initialEntry: string) {
     return (
       <QueryClientProvider client={queryClient}>
         <MantineProvider>
-          <RoleProvider>
-            {children}
-          </RoleProvider>
+          <RoleProvider>{children}</RoleProvider>
         </MantineProvider>
       </QueryClientProvider>
     );

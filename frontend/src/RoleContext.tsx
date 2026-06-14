@@ -7,14 +7,16 @@ interface RoleContextValue {
 
 const RoleContext = createContext<RoleContextValue | null>(null);
 
-export function RoleProvider({ children, initialAdmin = false }: { children: ReactNode; initialAdmin?: boolean }) {
+export function RoleProvider({
+  children,
+  initialAdmin = false,
+}: {
+  children: ReactNode;
+  initialAdmin?: boolean;
+}) {
   const [isAdmin, setIsAdmin] = useState(initialAdmin);
 
-  return (
-    <RoleContext.Provider value={{ isAdmin, setIsAdmin }}>
-      {children}
-    </RoleContext.Provider>
-  );
+  return <RoleContext.Provider value={{ isAdmin, setIsAdmin }}>{children}</RoleContext.Provider>;
 }
 
 export function useRoleContext(): RoleContextValue {

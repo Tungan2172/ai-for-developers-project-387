@@ -10,9 +10,21 @@ import { AdminEventTypes } from '../src/pages/AdminEventTypes.tsx';
 import { eventTypes } from './mocks/handlers.ts';
 
 beforeEach(() => {
-  eventTypes.splice(0, eventTypes.length,
-    { id: 1, title: '15-минутная встреча', description: 'Быстрая синхронизация', durationMinutes: 15 },
-    { id: 2, title: 'Часовая консультация', description: 'Подробное обсуждение проекта', durationMinutes: 60 },
+  eventTypes.splice(
+    0,
+    eventTypes.length,
+    {
+      id: 1,
+      title: '15-минутная встреча',
+      description: 'Быстрая синхронизация',
+      durationMinutes: 15,
+    },
+    {
+      id: 2,
+      title: 'Часовая консультация',
+      description: 'Подробное обсуждение проекта',
+      durationMinutes: 60,
+    },
   );
 });
 
