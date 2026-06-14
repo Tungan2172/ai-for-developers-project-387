@@ -7,19 +7,28 @@ import { Router } from './router.tsx';
 
 import '@mantine/core/styles.css';
 
-const queryClient = new QueryClient();
+async function start() {
+  if (import.meta.env.DEV) {
+    const { worker } = await import('../tests/mocks/browser.ts');
+    await worker.start({ onUnhandledRequest: 'warn' });
+  }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error('Root element #root not found');
+  const queryClient = new QueryClient();
+
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    throw new Error('Root element #root not found');
+  }
+
+  createRoot(rootElement).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <MantineProvider>
+          <Router />
+        </MantineProvider>
+      </QueryClientProvider>
+    </StrictMode>,
+  );
 }
 
-createRoot(rootElement).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <MantineProvider>
-        <Router />
-      </MantineProvider>
-    </QueryClientProvider>
-  </StrictMode>,
-);
+start().catch(console.error);
