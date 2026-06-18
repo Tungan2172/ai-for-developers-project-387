@@ -36,9 +36,10 @@ jobs:
       - name: Types (mypy)
         working-directory: backend
         run: uv run mypy
-      - name: Tests (pytest)
+      - name: Tests (pytest, incl. testcontainers)
         working-directory: backend
         run: uv run pytest
+        timeout-minutes: 10
 
   frontend:
     runs-on: ubuntu-latest

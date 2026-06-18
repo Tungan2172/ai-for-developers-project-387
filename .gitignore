@@ -39,5 +39,9 @@ frontend/dist/
 # opencode
 .opencode/
 
+# Hypothesis cache (schemathesis)
+.hypothesis/
+
 # Session history
 session-course_calendar.md
+session-frontend-calendar.md
