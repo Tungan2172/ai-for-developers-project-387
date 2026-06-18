@@ -112,12 +112,16 @@ uv ставится в `~/.local/bin` (Makefile сам добавляет в PAT
 ## Карта этапов
 
 - [x] **S0a** — TypeSpec-контракт (PR #1, смержён).
-- [~] **S0b** — скелеты backend/frontend, Makefile, docker, CI, Prism (текущий).
-- [ ] **F0** — скелет фронта: Mantine + React Router + TanStack Query +
-      openapi-fetch (кодген) + MSW.
-- [ ] **F-welcome / F1..F5** — экраны гостя и админки (макеты в `makets/`),
-      разработка против MSW-фикстур.
-- [ ] **B1** — Postgres+SQLAlchemy+Alembic+testcontainers; таблицы
+- [x] **S0b** — скелеты backend/frontend, Makefile, docker, CI, Prism (PR #2, смержён).
+- [x] **F0** — скелет фронта: Mantine + React Router + TanStack Query +
+      openapi-fetch (кодген) + MSW (PR #3, смержён).
+- [x] **F-welcome** — страница приветствия с профилем владельца и списком типов (PR #4, смержён).
+- [x] **F1** — страница деталей типа события (PR #5, смержён).
+- [x] **F2** — страница календаря и выбора слотов (PR #6, смержён).
+- [x] **F3** — форма бронирования с полями guestName/guestEmail/note (PR #7, смержён).
+- [x] **F4** — страница списка броней администратора с отменой (PR #8, смержён).
+- [x] **F5** — CRUD типов событий администратора (PR #9, смержён).
+- [x] **B1** — Postgres+SQLAlchemy+Alembic+testcontainers; таблицы
       `event_types`,`bookings`; `btree_gist`+EXCLUDE; сид `owner`.
 - [ ] **B2** — `POST/GET /event-types`, `GET /event-types/{id}`.
 - [ ] **B3** — `PATCH`+`DELETE /event-types/{id}` (409 при бронях).
