@@ -232,9 +232,7 @@ class TestDeleteEventType:
 
 
 class TestGetSlots:
-    def test_not_found(
-        self, client_with_bookings: TestClient
-    ) -> None:
+    def test_not_found(self, client_with_bookings: TestClient) -> None:
         resp = client_with_bookings.get("/event-types/999/slots")
         assert resp.status_code == 404
         data = resp.json()
