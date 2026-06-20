@@ -1,8 +1,7 @@
 #!/bin/sh
 set -e
 
-uv run alembic upgrade head 2>/dev/null || \
-    uv run python -c "from app.adapters.database import Base, engine; Base.metadata.create_all(bind=engine)"
+uv run alembic upgrade head 2>/dev/null || uv run python -m app.ensure_db
 
 uv run python -m app.seed
 
