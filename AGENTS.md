@@ -129,4 +129,4 @@ uv ставится в `~/.local/bin` (Makefile сам добавляет в PAT
 - [x] **B5** — `POST /bookings` (409/422, EXCLUDE).
 - [x] **B6** — `GET /bookings` + `DELETE /bookings/{id}` + `GET /owner`.
 - [x] **B7** — полный контракт-тест `schemathesis` (+ DataError/IntegrityError handlers).
-- [ ] **S-fin** — сборка через docker compose, доводка make, сквозной smoke.
+- [x] **S-fin** — сборка через docker compose, доводка make, сквозной smoke.
