@@ -10,7 +10,7 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 
 async function start() {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.DEV && !import.meta.env.VITE_E2E) {
     const { worker } = await import('../tests/mocks/browser.ts');
     await worker.start({ onUnhandledRequest: 'warn' });
   }
