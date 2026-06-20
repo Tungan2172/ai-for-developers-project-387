@@ -6,7 +6,7 @@ export PATH := $(HOME)/.local/bin:$(PATH)
 
 .PHONY: help install api codegen mock run deploy stop clean build \
         test test-backend test-frontend lint lint-backend lint-frontend \
-        fmt migrate seed
+        fmt migrate seed smoke
 
 help: ## Показать список команд
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -29,7 +29,18 @@ mock: api ## Поднять Prism mock-сервер из контракта (п�
 run: ## Поднять всё локально через docker compose
 	docker compose up --build -d
 
-deploy: run ## Локальный деплой (синоним run)
+deploy: ## Полный локальный деплой: контракт → образы → БД → сид
+	$(MAKE) build
+	docker compose up -d
+	@echo "Waiting for backend..."
+	@for i in $$(seq 1 30); do \
+		if curl -sf http://localhost:8000/health > /dev/null 2>&1; then \
+			echo "Backend ready"; \
+			break; \
+		fi; \
+		sleep 1; \
+	done
+	$(MAKE) smoke
 
 stop: ## Остановить контейнеры
 	docker compose down
@@ -38,8 +49,9 @@ clean: ## Остановить, удалить тома и артефакты с
 	docker compose down -v
 	rm -rf api/dist frontend/dist
 
-build: ## Собрать контракт и docker-образы
+build: ## Собрать контракт, TS-типы и docker-образы
 	$(MAKE) api
+	$(MAKE) codegen
 	docker compose build
 
 test: test-backend test-frontend ## Прогнать все тесты
@@ -67,3 +79,14 @@ migrate: ## Применить миграции БД (Alembic) — добавл�
 
 seed: ## Засидировать профиль владельца — добавляется на этапе B1
 	cd backend && uv run python -m app.seed
+
+smoke: ## Сквозной smoke-тест — проверить, что всё работает
+	@echo "Health..."
+	curl -sf http://localhost:8000/health > /dev/null && echo "  OK"
+	@echo "Owner..."
+	curl -sf http://localhost:8000/owner > /dev/null && echo "  OK"
+	@echo "Event types list..."
+	curl -sf http://localhost:8000/event-types > /dev/null && echo "  OK"
+	@echo "Frontend..."
+	curl -sf http://localhost:8080/ > /dev/null && echo "  OK"
+	@echo "All smoke checks passed"
