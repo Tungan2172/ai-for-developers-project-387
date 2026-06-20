@@ -46,6 +46,9 @@ class BookingRepository(ABC):
     @abstractmethod
     def has_overlap(self, start: datetime, end: datetime) -> bool: ...
 
+    @abstractmethod
+    def list_by_range(self, start: datetime, end: datetime) -> list[Booking]: ...
+
 
 class OwnerRepository(ABC):
     @abstractmethod
