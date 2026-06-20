@@ -90,6 +90,7 @@ docker-compose.yml, Makefile   — в корне
 - CI — `ci.yml` (lint+test+contract). Файл `.github/workflows/hexlet-check.yml`
   НЕ редактировать.
 - `makets/` (макеты фронта) — в `.gitignore`, не коммитим.
+- E2E-тесты (`frontend/e2e/`) используют Playwright + реальный backend. Запуск: `cd frontend && npm run test:e2e`.
 
 ## Команды (Makefile)
 
