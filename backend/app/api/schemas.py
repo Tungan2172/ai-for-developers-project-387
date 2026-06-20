@@ -31,3 +31,16 @@ class EventTypeCreateIn(BaseModel):
     title: str = Field(min_length=1, max_length=200)
     description: str
     duration_minutes: int = Field(ge=1, le=480, validation_alias="durationMinutes")
+
+
+class EventTypeUpdateIn(BaseModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
+    title: str | None = Field(default=None, min_length=1, max_length=200)
+    description: str | None = None
+    duration_minutes: int | None = Field(
+        default=None, ge=1, le=480, validation_alias="durationMinutes"
+    )
