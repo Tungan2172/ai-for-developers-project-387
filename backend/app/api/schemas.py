@@ -90,3 +90,15 @@ class BookingOut(BaseModel):
     guest_email: str = Field(validation_alias="guestEmail")
     note: str | None = None
     created_at: datetime = Field(validation_alias="createdAt")
+
+
+class OwnerOut(BaseModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
+    name: str
+    title: str
+    description: str

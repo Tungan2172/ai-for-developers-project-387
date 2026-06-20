@@ -228,3 +228,83 @@ class TestCreateBooking:
         assert resp.status_code == 409
         data = resp.json()
         assert data["code"] == "slot_busy"
+
+
+class TestListBookings:
+    def test_empty_list(self, client: TestClient) -> None:
+        resp = client.get("/bookings")
+        assert resp.status_code == 200
+        assert resp.json() == []
+
+    def test_returns_upcoming_bookings(
+        self, client: TestClient, fake_booking_repo: FakeBookingRepository
+    ) -> None:
+        now = datetime.now(MSK)
+        future = now + timedelta(days=7)
+        fake_booking_repo.create(
+            Booking(
+                id=0,
+                event_type_id=1,
+                event_type_title="Future",
+                duration_minutes=30,
+                start=future,
+                end=future + timedelta(minutes=30),
+                guest_name="John",
+                guest_email="john@test.com",
+            )
+        )
+        resp = client.get("/bookings")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert len(data) == 1
+        assert data[0]["eventTypeTitle"] == "Future"
+
+    def test_skips_past_bookings(
+        self, client: TestClient, fake_booking_repo: FakeBookingRepository
+    ) -> None:
+        now = datetime.now(MSK)
+        past = now - timedelta(days=3)
+        fake_booking_repo.create(
+            Booking(
+                id=0,
+                event_type_id=1,
+                event_type_title="Past",
+                duration_minutes=30,
+                start=past,
+                end=past + timedelta(minutes=30),
+                guest_name="John",
+                guest_email="john@test.com",
+            )
+        )
+        resp = client.get("/bookings")
+        assert resp.status_code == 200
+        assert resp.json() == []
+
+
+class TestCancelBooking:
+    def test_cancels_booking(
+        self, client: TestClient, fake_booking_repo: FakeBookingRepository
+    ) -> None:
+        now = datetime.now(MSK)
+        future = now + timedelta(days=7)
+        fake_booking_repo.create(
+            Booking(
+                id=0,
+                event_type_id=1,
+                event_type_title="Test",
+                duration_minutes=30,
+                start=future,
+                end=future + timedelta(minutes=30),
+                guest_name="John",
+                guest_email="john@test.com",
+            )
+        )
+        resp = client.delete("/bookings/1")
+        assert resp.status_code == 204
+        assert fake_booking_repo.get_by_id(1) is None
+
+    def test_not_found(self, client: TestClient) -> None:
+        resp = client.delete("/bookings/999")
+        assert resp.status_code == 404
+        data = resp.json()
+        assert data["code"] == "booking_not_found"

@@ -13,6 +13,26 @@ from app.domain.slots import BOOKING_WINDOW_DAYS, MOSCOW_TZ, validate_booking_sl
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
 
+@router.get("", response_model=list[BookingOut])
+def list_bookings(
+    booking_repo: BookingRepository = Depends(get_booking_repository),
+) -> list[BookingOut]:
+    bookings = booking_repo.list_upcoming()
+    return [BookingOut.model_validate(b) for b in bookings]
+
+
+@router.delete("/{booking_id}", status_code=204)
+def cancel_booking(
+    booking_id: int,
+    booking_repo: BookingRepository = Depends(get_booking_repository),
+) -> Response:
+    booking = booking_repo.get_by_id(booking_id)
+    if booking is None:
+        return api_error_response(404, "booking_not_found", f"Booking {booking_id} not found")
+    booking_repo.delete(booking_id)
+    return Response(status_code=204)
+
+
 @router.post("", status_code=201)
 def create_booking(
     body: BookingCreateIn,

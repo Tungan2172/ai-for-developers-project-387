@@ -127,6 +127,6 @@ uv ставится в `~/.local/bin` (Makefile сам добавляет в PAT
 - [x] **B3** — `PATCH`+`DELETE /event-types/{id}` (409 при бронях).
 - [x] **B4** — генерация слотов + `GET .../slots`.
 - [x] **B5** — `POST /bookings` (409/422, EXCLUDE).
-- [ ] **B6** — `GET /bookings` + `DELETE /bookings/{id}` + `GET /owner`.
+- [x] **B6** — `GET /bookings` + `DELETE /bookings/{id}` + `GET /owner`.
 - [ ] **B7** — полный контракт-тест `schemathesis`.
 - [ ] **S-fin** — сборка через docker compose, доводка make, сквозной smoke.

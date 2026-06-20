@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api import bookings, event_types, health
+from app.api import bookings, event_types, health, owner
 from app.api.errors import register_error_handlers
 
 
@@ -10,6 +10,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(event_types.router)
     app.include_router(bookings.router)
+    app.include_router(owner.router)
     return app
 
 
