@@ -95,3 +95,9 @@ class FakeBookingRepository(BookingRepository):
 
     def has_overlap(self, start: datetime, end: datetime) -> bool:
         return any(b.start < end and b.end > start for b in self._storage.values())
+
+    def list_by_range(self, start: datetime, end: datetime) -> list[Booking]:
+        return sorted(
+            [b for b in self._storage.values() if b.start < end and b.end > start],
+            key=lambda b: b.start,
+        )
