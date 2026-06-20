@@ -3,7 +3,13 @@ import type { APIRequestContext } from '@playwright/test';
 const API_BASE = 'http://localhost:8000';
 const MSK = '+03:00';
 
-export function mskDate(year: number, month: number, day: number, hour: number, minute: number): string {
+export function mskDate(
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
+  minute: number,
+): string {
   const m = String(month).padStart(2, '0');
   const d = String(day).padStart(2, '0');
   const h = String(hour).padStart(2, '0');
