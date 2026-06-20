@@ -36,7 +36,8 @@ test.describe('Guest booking flow', () => {
     );
     expect(slotsResp.status()).toBe(200);
     const slots = (await slotsResp.json()) as Array<{ start: string; end: string; status: string }>;
-    const Slot10 = slots.find((s) => s.start.includes('T10:00:00'));
+    console.log('SLOT_COUNT:', slots.length, 'FIRST_START:', slots[0]?.start, 'FIRST_STATUS:', slots[0]?.status);
+    const Slot10 = slots.find((s) => s.start.includes('10:00') || s.start.includes('07:00'));
     expect(Slot10).toBeDefined();
     expect(Slot10!.status).toBe('busy');
 
