@@ -99,4 +99,12 @@ def generate_slots(
 
 
 def _overlaps_any_booking(start: datetime, end: datetime, bookings: list[Booking]) -> bool:
-    return any(b.start < end and b.end > start for b in bookings)
+    import logging
+    _log = logging.getLogger(__name__)
+    for b in bookings:
+        overlap = b.start < end and b.end > start
+        if b.start.hour == 7:
+            _log.warning("_overlaps CHECK: slot_start=%s slot_end=%s b_start=%s b_end=%s overlap=%s", start, end, b.start, b.end, overlap)
+        if overlap:
+            return True
+    return False
