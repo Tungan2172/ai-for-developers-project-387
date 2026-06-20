@@ -32,12 +32,11 @@ test.describe('Guest booking flow', () => {
   test('Calendar shows free and busy slots', async ({ page, request }) => {
     // Check via API that the slot is busy
     const slotsResp = await request.get(
-      `http://localhost:8000/event-types/${eventTypeId}/slots?from=2026-06-22&to=2026-06-22`,
+      `http://localhost:8000/event-types/${eventTypeId}/slots?from=2026-06-22&to=2026-06-23`,
     );
     expect(slotsResp.status()).toBe(200);
     const slots = (await slotsResp.json()) as Array<{ start: string; end: string; status: string }>;
-    console.log('SLOT_COUNT:', slots.length, 'FIRST_START:', slots[0]?.start, 'FIRST_STATUS:', slots[0]?.status);
-    const Slot10 = slots.find((s) => s.start.includes('10:00') || s.start.includes('07:00'));
+    const Slot10 = slots.find((s) => s.start.includes('10:00'));
     expect(Slot10).toBeDefined();
     expect(Slot10!.status).toBe('busy');
 
