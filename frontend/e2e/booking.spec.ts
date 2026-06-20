@@ -37,6 +37,8 @@ test.describe('Guest booking flow', () => {
     const day22 = page.locator('.mantine-Calendar-day').filter({ hasText: String(MONDAY) });
     await day22.click();
 
+    await page.waitForTimeout(2000);
+
     const enDash = '\u2013';
     const busySlot = page.getByRole('button', { name: `10:00${enDash}10:30` });
     await expect(busySlot).toBeDisabled();

@@ -113,6 +113,10 @@ def get_slots(
     bookings = booking_repo.list_by_range(window_start, window_end)
     now = datetime.now(MOSCOW_TZ)
 
+    print(f"DEBUG: window_start={window_start}, window_end={window_end}, bookings={len(bookings)}")
+    for b in bookings:
+        print(f"DEBUG:   booking {b.id}: start={b.start}, end={b.end}")
+
     slots = generate_slots(et, from_val, to_val, bookings, now)
     return JSONResponse(
         content=[SlotOut.model_validate(s).model_dump(by_alias=True, mode="json") for s in slots]
