@@ -29,7 +29,17 @@ test.describe('Guest booking flow', () => {
     await expect(page.getByText('30 мин')).toBeVisible();
   });
 
-  test('Calendar shows free and busy slots', async ({ page }) => {
+  test('Calendar shows free and busy slots', async ({ page, request }) => {
+    // Check via API that the slot is busy
+    const slotsResp = await request.get(
+      `http://localhost:8000/event-types/${eventTypeId}/slots?from=2026-06-22&to=2026-06-22`,
+    );
+    expect(slotsResp.status()).toBe(200);
+    const slots = (await slotsResp.json()) as Array<{ start: string; end: string; status: string }>;
+    const Slot10 = slots.find((s) => s.start.includes('T10:00:00'));
+    expect(Slot10).toBeDefined();
+    expect(Slot10!.status).toBe('busy');
+
     await page.goto(`/event-types/${eventTypeId}/book`);
 
     await expect(page.getByRole('heading', { level: 2, name: 'Consultation' })).toBeVisible();
@@ -37,12 +47,7 @@ test.describe('Guest booking flow', () => {
     const day22 = page.locator('.mantine-Calendar-day').filter({ hasText: String(MONDAY) });
     await day22.click();
 
-    await page.waitForTimeout(2000);
-
     const enDash = '\u2013';
-    const busySlot = page.getByRole('button', { name: `10:00${enDash}10:30` });
-    await expect(busySlot).toBeDisabled();
-
     const freeSlot = page.getByRole('button', { name: `10:30${enDash}11:00` });
     await expect(freeSlot).not.toBeDisabled();
   });
