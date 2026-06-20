@@ -69,9 +69,7 @@ def _valid_slot_start(minutes_offset: int = 60) -> datetime:
 
 
 class TestCreateBooking:
-    def test_creates_booking(
-        self, client: TestClient, fake_repo: FakeEventTypeRepository
-    ) -> None:
+    def test_creates_booking(self, client: TestClient, fake_repo: FakeEventTypeRepository) -> None:
         fake_repo.create(title="Meeting", description="desc", duration_minutes=60)
         start = _valid_slot_start(0)
 
