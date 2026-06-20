@@ -133,6 +133,18 @@ class SqlAlchemyBookingRepository(BookingRepository):
         )
         return self._session.execute(stmt).first() is not None
 
+    def list_by_range(self, start: datetime, end: datetime) -> list[Booking]:
+        models = (
+            self._session.execute(
+                select(BookingModel)
+                .where(BookingModel.start < end, BookingModel.end > start)
+                .order_by(BookingModel.start)
+            )
+            .scalars()
+            .all()
+        )
+        return [self._to_domain(m) for m in models]
+
     @staticmethod
     def _to_domain(model: BookingModel) -> Booking:
         return Booking(
