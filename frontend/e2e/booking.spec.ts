@@ -23,7 +23,9 @@ test.describe('Guest booking flow', () => {
   test('Welcome page shows owner and event type list', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1, name: 'Host' })).toBeVisible();
-    await expect(page.getByText('Consultation')).toBeVisible();
+
+    const eventTypeCard = page.getByRole('heading', { level: 3, name: 'Consultation' });
+    await expect(eventTypeCard).toBeVisible();
     await expect(page.getByText('30 мин')).toBeVisible();
   });
 
@@ -62,7 +64,6 @@ test.describe('Guest booking flow', () => {
       page.getByText('Встреча успешно забронирована. Вы получите уведомление на email.'),
     ).toBeVisible();
 
-    // Cleanup: delete the booking created during this test
     const resp = await page.request.get('http://localhost:8000/bookings');
     const bookings = (await resp.json()) as Array<{ id: number; start: string }>;
     const created = bookings.find((b) => b.start === start);
