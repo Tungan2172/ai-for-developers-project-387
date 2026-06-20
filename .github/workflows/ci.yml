@@ -25,6 +25,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install TypeSpec deps
+        working-directory: api
+        run: npm ci
+      - name: Compile contract
+        working-directory: api
+        run: npx tsp compile . --warn-as-error
       - name: Install uv
         uses: astral-sh/setup-uv@v5
       - name: Sync deps
