@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from pydantic.alias_generators import to_camel
 
 
@@ -58,3 +58,35 @@ class SlotOut(BaseModel):
     start: datetime
     end: datetime
     status: str
+
+
+class BookingCreateIn(BaseModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
+    event_type_id: int = Field(validation_alias="eventTypeId")
+    start: datetime
+    guest_name: str = Field(min_length=1, max_length=200, validation_alias="guestName")
+    guest_email: EmailStr = Field(max_length=200, validation_alias="guestEmail")
+    note: str | None = Field(default=None, max_length=2000)
+
+
+class BookingOut(BaseModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
+    id: int
+    event_type_id: int = Field(validation_alias="eventTypeId")
+    event_type_title: str = Field(validation_alias="eventTypeTitle")
+    duration_minutes: int = Field(validation_alias="durationMinutes")
+    start: datetime
+    end: datetime
+    guest_name: str = Field(validation_alias="guestName")
+    guest_email: str = Field(validation_alias="guestEmail")
+    note: str | None = None
+    created_at: datetime = Field(validation_alias="createdAt")
