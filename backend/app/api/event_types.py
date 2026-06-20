@@ -1,8 +1,11 @@
+import logging
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, Query, Response
 from fastapi.responses import JSONResponse
+
+logger = logging.getLogger(__name__)
 
 from app.api.dependencies import get_booking_repository, get_event_type_repository
 from app.api.errors import api_error_response
@@ -113,9 +116,9 @@ def get_slots(
     bookings = booking_repo.list_by_range(window_start, window_end)
     now = datetime.now(MOSCOW_TZ)
 
-    print(f"DEBUG: window_start={window_start}, window_end={window_end}, bookings={len(bookings)}")
+    logger.warning("get_slots: window_start=%s window_end=%s bookings=%d", window_start, window_end, len(bookings))
     for b in bookings:
-        print(f"DEBUG:   booking {b.id}: start={b.start}, end={b.end}")
+        logger.warning("get_slots:  booking id=%d start=%s end=%s", b.id, b.start, b.end)
 
     slots = generate_slots(et, from_val, to_val, bookings, now)
     return JSONResponse(
