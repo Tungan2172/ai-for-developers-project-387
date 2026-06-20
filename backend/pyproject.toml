@@ -39,6 +39,8 @@ src = ["app", "tests"]
 [tool.ruff.lint]
 # Базовый, но осмысленный набор: ошибки, баги, импорты, апгрейды, багбир.
 select = ["E", "F", "I", "UP", "B", "SIM", "C4"]
+# FastAPI использует Depends() как аргумент по умолчанию — B008 ложное срабатывание.
+ignore = ["B008"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]

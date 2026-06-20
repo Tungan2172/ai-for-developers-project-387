@@ -123,7 +123,7 @@ uv ставится в `~/.local/bin` (Makefile сам добавляет в PAT
 - [x] **F5** — CRUD типов событий администратора (PR #9, смержён).
 - [x] **B1** — Postgres+SQLAlchemy+Alembic+testcontainers; таблицы
       `event_types`,`bookings`; `btree_gist`+EXCLUDE; сид `owner`.
-- [ ] **B2** — `POST/GET /event-types`, `GET /event-types/{id}`.
+- [x] **B2** — `POST/GET /event-types`, `GET /event-types/{id}`.
 - [ ] **B3** — `PATCH`+`DELETE /event-types/{id}` (409 при бронях).
 - [ ] **B4** — генерация слотов + `GET .../slots`.
 - [ ] **B5** — `POST /bookings` (409/422, EXCLUDE).
