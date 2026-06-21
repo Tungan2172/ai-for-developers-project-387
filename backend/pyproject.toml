@@ -22,6 +22,7 @@ dev = [
     "httpx>=0.28",
     "schemathesis>=3.38",
     "testcontainers[postgres]>=4.9",
+    "pytest-cov>=6",
 ]
 
 [build-system]
@@ -50,6 +51,10 @@ python_version = "3.12"
 strict = true
 files = ["app", "tests"]
 plugins = ["pydantic.mypy"]
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["*/tests/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

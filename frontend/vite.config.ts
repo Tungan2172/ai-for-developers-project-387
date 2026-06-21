@@ -20,5 +20,11 @@ export default defineConfig({
     setupFiles: './tests/setupTests.ts',
     include: ['tests/**/*.tsx'],
     exclude: ['tests/setupTests.ts', 'tests/testWrapper.tsx', 'tests/mocks/**'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/api/schema.d.ts', 'src/main.tsx', 'src/vite-env.d.ts'],
+    },
   },
 });
