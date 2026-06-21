@@ -92,6 +92,7 @@ docker-compose.yml, Makefile   — в корне
 - `makets/` (макеты фронта) — в `.gitignore`, не коммитим.
 - E2E-тесты (`frontend/e2e/`) используют Playwright + реальный backend. Запуск: `cd frontend && npm run test:e2e`.
 - **Conventional Commits**: все коммиты — `feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:`. Breaking change — `feat!:` или `BREAKING CHANGE:` в теле. Release-please автоматически формирует changelog и Release PR.
+- **Деплой**: Render (Web Service). Root `Dockerfile` — многоступенчатая сборка (frontend build + Python backend + nginx). Nginx слушает `$PORT`, проксирует `/api/` на uvicorn (`:8000`). Entrypoint: `deploy/entrypoint.sh` (envsubst → migrate → seed → uvicorn → nginx). MCP-сервер Render настроен в `opencode.json`.
 
 ## Команды (Makefile)
 
