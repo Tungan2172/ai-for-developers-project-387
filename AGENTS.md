@@ -131,3 +131,5 @@ uv ставится в `~/.local/bin` (Makefile сам добавляет в PAT
 - [x] **B6** — `GET /bookings` + `DELETE /bookings/{id}` + `GET /owner`.
 - [x] **B7** — полный контракт-тест `schemathesis` (+ DataError/IntegrityError handlers).
 - [x] **S-fin** — сборка через docker compose, доводка make, сквозной smoke.
+- [x] **E2E** — Playwright E2E-тесты (браузерные + API), CI-pipeline e2e с
+      Postgres service. PR #18, смержён.
