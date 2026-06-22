@@ -3,7 +3,11 @@
 from sqlalchemy import text
 
 from app.adapters.database import Base, engine
-from app.adapters.orm import BookingModel, EventTypeModel, OwnerModel  # noqa: F401 — register models
+from app.adapters.orm import (  # noqa: F401 — register models
+    BookingModel,
+    EventTypeModel,
+    OwnerModel,
+)
 
 
 def ensure_db() -> None:
