@@ -3,6 +3,7 @@
 from sqlalchemy import text
 
 from app.adapters.database import Base, engine
+from app.adapters.orm import BookingModel, EventTypeModel, OwnerModel  # noqa: F401 — register models
 
 
 def ensure_db() -> None:
@@ -11,9 +12,15 @@ def ensure_db() -> None:
         c.execute(text("CREATE EXTENSION IF NOT EXISTS btree_gist"))
         c.execute(
             text(
-                "ALTER TABLE bookings ADD EXCLUDE USING gist ("
-                "  tstzrange(start, \"end\", '[)') WITH &&"
-                ")"
+                """DO $$ BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 FROM pg_constraint WHERE conname = 'bookings_exclude'
+                    ) THEN
+                        ALTER TABLE bookings ADD EXCLUDE USING gist (
+                            tstzrange(start, "end", '[)') WITH &&
+                        );
+                    END IF;
+                END $$;"""
             )
         )
         c.commit()
