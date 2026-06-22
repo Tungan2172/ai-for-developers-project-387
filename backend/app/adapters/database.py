@@ -11,7 +11,10 @@ class Base(DeclarativeBase):
     pass
 
 
-engine = create_engine(get_settings().database_url)
+_db_url = get_settings().database_url
+if _db_url.startswith("postgresql://") and "+" not in _db_url:
+    _db_url = _db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+engine = create_engine(_db_url)
 SessionFactory = sessionmaker(bind=engine)
 
 
