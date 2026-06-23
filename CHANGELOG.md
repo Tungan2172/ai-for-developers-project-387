@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.1.0](https://github.com/Tungan2172/ai-for-developers-project-386/compare/v1.0.0...v1.1.0) (2026-06-23)
+
+
+### Features
+
+* root Dockerfile + deploy configs for Render ([e166273](https://github.com/Tungan2172/ai-for-developers-project-386/commit/e166273fe9e94bf459bd7d8b4e0f80b2fdd8cc8e))
+* root Dockerfile + deploy configs for Render ([e166273](https://github.com/Tungan2172/ai-for-developers-project-386/commit/e166273fe9e94bf459bd7d8b4e0f80b2fdd8cc8e))
+* root Dockerfile + deploy configs for Render ([b6a91fc](https://github.com/Tungan2172/ai-for-developers-project-386/commit/b6a91fc239cd9a7bdc5cb734d0080b03d6d989d3))
+
+
+### Bug Fixes
+
+* auto-detect psycopg v3 driver for postgresql:// URLs ([ce7cd90](https://github.com/Tungan2172/ai-for-developers-project-386/commit/ce7cd90cb0e11d4b8fd96bbc980f130aa3c01415))
+* graceful DB init fallback + DB-aware health check ([106d36e](https://github.com/Tungan2172/ai-for-developers-project-386/commit/106d36e9f0671e706ec06f425060f8ea63d1916e))
+* graceful DB init fallback + DB-aware health check ([458b640](https://github.com/Tungan2172/ai-for-developers-project-386/commit/458b64065978feb450bf3aa61835badf8c8f9a6f))
+* install gettext-base for envsubst in Dockerfile ([1b31dad](https://github.com/Tungan2172/ai-for-developers-project-386/commit/1b31dad967eb4bd1a950b446a574d79692ba5b0d))
+* name EXCLUDE constraint in ensure_db DO block ([29adb29](https://github.com/Tungan2172/ai-for-developers-project-386/commit/29adb290e188f505cd39ff156e19f65f3a29d8a6))
+* name EXCLUDE constraint in ensure_db DO block ([e5adce8](https://github.com/Tungan2172/ai-for-developers-project-386/commit/e5adce860012f038a51aabe7d701eedd53c988cd))
+* register ORM models in ensure_db and fix alembic psycopg v3 URL ([8e60586](https://github.com/Tungan2172/ai-for-developers-project-386/commit/8e60586f3c8e09d3317a4ff0a14b8118741109c9))
+* use $PORT without default value syntax for envsubst compatibility ([9b61ee6](https://github.com/Tungan2172/ai-for-developers-project-386/commit/9b61ee6984bcfaa3d53a2466eee2521ab590876d))
+* use dynamic future dates in e2e booking test and fix ruff import order ([4528e92](https://github.com/Tungan2172/ai-for-developers-project-386/commit/4528e9203cf5640c971cb3c8dd6fcf6a90a036a7))
+
 ## 1.0.0 (2026-06-21)
 
 
