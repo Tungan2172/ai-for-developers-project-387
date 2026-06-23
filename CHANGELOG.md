@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.2.0](https://github.com/Tungan2172/ai-for-developers-project-387/compare/v1.1.0...v1.2.0) (2026-06-23)
+
+
+### Features
+
+* add nightly audit workflow (build + e2e + lighthouse + issue) ([621f04f](https://github.com/Tungan2172/ai-for-developers-project-387/commit/621f04ffd17fd306188a96b74f7764c71d6d37db))
+* add nightly audit workflow (build + e2e + lighthouse + issue) ([26858dc](https://github.com/Tungan2172/ai-for-developers-project-387/commit/26858dc5d5307d4e3f2aa2bc3b65042a8d54438f))
+* remove EventTypeDetail page, navigate Welcome → /event-types/{id}/book ([c20fbd5](https://github.com/Tungan2172/ai-for-developers-project-387/commit/c20fbd5e5678123f182b8123acaaadd523b513f3))
+
+
+### Bug Fixes
+
+* change nightly audit schedule to 01:30 MSK ([35fba61](https://github.com/Tungan2172/ai-for-developers-project-387/commit/35fba6106d0352837ae34c118da45563aad9fa34))
+* change nightly audit schedule to 01:30 MSK ([7645bd8](https://github.com/Tungan2172/ai-for-developers-project-387/commit/7645bd8effc5ecba96019efbeb5fee14dbecff42))
+* change nightly audit schedule to 01:45 MSK ([9966543](https://github.com/Tungan2172/ai-for-developers-project-387/commit/9966543ca2d54f222770541f0d9463c67ee6a1ab))
+* change nightly audit schedule to 02:00 MSK ([39d06ac](https://github.com/Tungan2172/ai-for-developers-project-387/commit/39d06ac3c464707b350bc849ac395fcf68c7ab71))
+* change nightly audit schedule to 02:30 MSK ([951f4e3](https://github.com/Tungan2172/ai-for-developers-project-387/commit/951f4e3cb4744c3558d6fc64e8c2e8ddd4542dfb))
+* change nightly audit schedule to 06:00 MSK ([2d97896](https://github.com/Tungan2172/ai-for-developers-project-387/commit/2d9789681070cabcda8bfd2d40841502b1960ce3))
+* change nightly audit schedule to 06:00 MSK ([b1864a8](https://github.com/Tungan2172/ai-for-developers-project-387/commit/b1864a8d9556968506b7eef9360267447968c8e7))
+* correct nightly audit cron to 00:55 MSK and fix YAML block scala… ([71cc990](https://github.com/Tungan2172/ai-for-developers-project-387/commit/71cc99027ab7419c44d0f07334d1484fd852a989))
+* correct nightly audit cron to 00:55 MSK and fix YAML block scalar in issue body ([f38ae8a](https://github.com/Tungan2172/ai-for-developers-project-387/commit/f38ae8a2901423c46b747c4ff1cb2041ec1ffd21))
+* pass GITHUB_TOKEN explicitly to release-please-action ([5e4c78a](https://github.com/Tungan2172/ai-for-developers-project-387/commit/5e4c78a58c8d154935a588a0d957fd5da8751c84))
+* quote pg_isready health check in postgres service ([fd52090](https://github.com/Tungan2172/ai-for-developers-project-387/commit/fd5209014c46c315ff518ba5723de26923d908dc))
+* quote pg_isready health check in postgres service ([af19e73](https://github.com/Tungan2172/ai-for-developers-project-387/commit/af19e7321a27b3630a9822b64225a0bf021e5d99))
+* remove dead code and fix now/today ordering in slot generation ([e47154c](https://github.com/Tungan2172/ai-for-developers-project-387/commit/e47154c5c37411658c78dba094d7f373773ad065))
+* remove manual server start, let Playwright webServer manage lifecycle ([e7944b0](https://github.com/Tungan2172/ai-for-developers-project-387/commit/e7944b0e9183cdd53b8aeef7c9d8d3bde0e7ce5c))
+* restrict /oc triggers to explain/fix/comment and add bot-actor guard ([ad7e513](https://github.com/Tungan2172/ai-for-developers-project-387/commit/ad7e5137651a9bc8fe77cefec458064c612831fc))
+* use PAT for release-please to bypass PR creation restriction ([f70a677](https://github.com/Tungan2172/ai-for-developers-project-387/commit/f70a677d364b1b8230ed158cf856161140866d58))
+* use PAT for release-please to bypass PR creation restriction ([e874fac](https://github.com/Tungan2172/ai-for-developers-project-387/commit/e874fac843a847785a4f06f3c12ad23fb59b0ec9))
+
 ## [1.1.0](https://github.com/Tungan2172/ai-for-developers-project-386/compare/v1.0.0...v1.1.0) (2026-06-23)
 
 
