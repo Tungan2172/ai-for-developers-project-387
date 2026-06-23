@@ -108,12 +108,9 @@ export function BookingForm() {
   return (
     <Container size="sm" py="xl">
       <Stack gap="lg">
-        <div>
-          <Title order={2}>{eventType.title}</Title>
-          <Text c="dimmed" size="sm">
-            {formattedDate}, {formattedTime} · {eventType.durationMinutes} мин
-          </Text>
-        </div>
+        <Text c="dimmed" size="sm">
+          {formattedDate}, {formattedTime}
+        </Text>
 
         {apiError ? <Alert color="red">{apiError.message}</Alert> : null}
 

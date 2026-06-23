@@ -1,4 +1,4 @@
-import { Button, Container, SimpleGrid, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { Button, Container, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -32,12 +32,6 @@ export function BookSlot() {
     enabled: !Number.isNaN(eventTypeId),
   });
 
-  const eventTypeQuery = useQuery({
-    queryKey: ['event-type', eventTypeId],
-    queryFn: () => client.GET('/event-types/{id}', { params: { path: { id: eventTypeId } } }),
-    enabled: !Number.isNaN(eventTypeId),
-  });
-
   if (isAdmin) return <Navigate to="/" replace />;
 
   if (Number.isNaN(eventTypeId)) {
@@ -48,7 +42,7 @@ export function BookSlot() {
     );
   }
 
-  if (slotsQuery.isLoading || eventTypeQuery.isLoading) {
+  if (slotsQuery.isLoading) {
     return (
       <Container size="sm" py="xl">
         <Stack gap="lg">
@@ -60,25 +54,19 @@ export function BookSlot() {
     );
   }
 
-  const slotsData = slotsQuery.data;
-  const eventTypeData = eventTypeQuery.data;
+  const allSlots = slotsQuery.data?.data;
 
   const errorMessage =
-    slotsData?.error?.message ??
-    eventTypeData?.error?.message ??
-    (slotsQuery.error instanceof Error ? slotsQuery.error.message : null) ??
-    (eventTypeQuery.error instanceof Error ? eventTypeQuery.error.message : null);
+    slotsQuery.data?.error?.message ??
+    (slotsQuery.error instanceof Error ? slotsQuery.error.message : null);
 
-  if (errorMessage || !slotsData?.data || !eventTypeData?.data) {
+  if (errorMessage || !allSlots) {
     return (
       <Container size="sm" py="xl">
         <Text c="red">{errorMessage ?? 'Не удалось загрузить данные'}</Text>
       </Container>
     );
   }
-
-  const eventType = eventTypeData.data;
-  const allSlots = slotsData.data;
 
   const slotsByDate = allSlots.reduce<Record<string, Slot[]>>((acc, slot) => {
     const dateKey = dayjs(slot.start).format('YYYY-MM-DD');
@@ -97,13 +85,6 @@ export function BookSlot() {
   return (
     <Container size="sm" py="xl">
       <Stack gap="lg">
-        <div>
-          <Title order={2}>{eventType.title}</Title>
-          <Text c="dimmed" size="sm">
-            {eventType.durationMinutes} мин
-          </Text>
-        </div>
-
         <Calendar
           getDayProps={(date) => ({
             selected: selectedDate ? isSameDay(dayjs(date), dayjs(selectedDate)) : false,
