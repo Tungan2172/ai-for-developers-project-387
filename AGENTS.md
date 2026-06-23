@@ -84,6 +84,7 @@ docker-compose.yml, Makefile   — в корне
 этап после одобрения.
 
 - **Ветка на этап**, PR через `gh`, **обычный merge без squash**.
+- **Мердж PR — только после approve пользователя.** Агент НЕ мерджит самостоятельно.
 - Коммиты по типам: `feat: ...` (реализация), затем `test: ...` (тесты),
   `chore:`/`docs:`/`ci:` по смыслу. AGENTS.md — отдельным коммитом.
 - Git identity: `opencode[bot] <41898282+opencode[bot]@users.noreply.github.com>`.
@@ -118,7 +119,7 @@ uv ставится в `~/.local/bin` (Makefile сам добавляет в PAT
 - `.github/workflows/opencode.yml` — AI-агент активируется по командам `/oc` или `/opencode` в issue/PR-комментариях
 - `.github/workflows/release-please.yml` — автоматический changelog и релизы из main
 - **Conventional Commits** (`feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:`) обязательны для корректной работы release-please
-- AI-агент создаёт коммиты, PRы и проходит code-review с пользователем
+- AI-агент создаёт коммиты, PRы и проходит code-review с пользователем. Мердж — только после approve пользователя.
 
 Необходимый секрет в GitHub: `OPENCODE_API_KEY` (для запуска opencode.yml).
 
