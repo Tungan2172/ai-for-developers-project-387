@@ -2,7 +2,7 @@ name: nightly-audit
 
 on:
   schedule:
-    - cron: '30 22 * * 1-5'
+    - cron: '45 22 * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -34,36 +34,8 @@ jobs:
       - name: Install frontend deps
         run: cd frontend && npm ci
 
-      - name: Build frontend
-        run: cd frontend && npm run build
-
       - name: Install backend deps
         run: cd backend && uv sync
-
-      - name: Start backend
-        working-directory: backend
-        run: |
-          APP_DATABASE_URL=postgresql+psycopg://scheduler:scheduler@localhost:5432/scheduler \
-          nohup ./entrypoint.sh > /tmp/backend.log 2>&1 &
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
-              echo "Backend ready"
-              break
-            fi
-            sleep 1
-          done
-
-      - name: Start frontend
-        working-directory: frontend
-        run: |
-          VITE_E2E=true nohup npm run dev > /tmp/frontend.log 2>&1 &
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:5173 > /dev/null 2>&1; then
-              echo "Frontend ready"
-              break
-            fi
-            sleep 1
-          done
 
       - name: Install Playwright browsers
         working-directory: frontend
@@ -82,6 +54,28 @@ jobs:
         with:
           name: e2e-results
           path: frontend/playwright-report/
+
+      - name: Start servers for Lighthouse
+        working-directory: backend
+        run: |
+          APP_DATABASE_URL=postgresql+psycopg://scheduler:scheduler@localhost:5432/scheduler \
+          nohup ./entrypoint.sh > /tmp/lh-backend.log 2>&1 &
+          for i in $(seq 1 15); do
+            if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
+              echo "Backend ready"
+              break
+            fi
+            sleep 1
+          done
+          cd ../frontend
+          VITE_E2E=true nohup npm run dev > /tmp/lh-frontend.log 2>&1 &
+          for i in $(seq 1 15); do
+            if curl -sf http://localhost:5173 > /dev/null 2>&1; then
+              echo "Frontend ready"
+              break
+            fi
+            sleep 1
+          done
 
       - name: Run Lighthouse audit
         run: |
