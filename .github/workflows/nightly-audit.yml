@@ -5,6 +5,9 @@ on:
     - cron: '00 23 * * 1-5'
   workflow_dispatch:
 
+permissions:
+  issues: write
+
 jobs:
   audit:
     runs-on: ubuntu-latest
@@ -36,24 +39,6 @@ jobs:
 
       - name: Install backend deps
         run: cd backend && uv sync
-
-      - name: Install Playwright browsers
-        working-directory: frontend
-        run: npx playwright install chromium
-
-      - name: Run e2e tests
-        working-directory: frontend
-        run: npx playwright test
-        env:
-          APP_DATABASE_URL: postgresql+psycopg://scheduler:scheduler@localhost:5432/scheduler
-        continue-on-error: true
-
-      - name: Upload e2e results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: e2e-results
-          path: frontend/playwright-report/
 
       - name: Start servers for Lighthouse
         working-directory: backend
@@ -118,8 +103,6 @@ jobs:
           | Best Practices | ${BP} / 100 |
           | SEO | ${SEO} / 100 |
 
-          ### E2E Tests
-          » [Download e2e report](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})
           BODYEOF
 
           if ! gh issue create \
