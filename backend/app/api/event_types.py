@@ -1,5 +1,4 @@
 from datetime import date, datetime, timedelta
-from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, Query, Response
 from fastapi.responses import JSONResponse
@@ -8,9 +7,7 @@ from app.api.dependencies import get_booking_repository, get_event_type_reposito
 from app.api.errors import api_error_response
 from app.api.schemas import EventTypeCreateIn, EventTypeOut, EventTypeUpdateIn, SlotOut
 from app.domain.interfaces import BookingRepository, EventTypeRepository
-from app.domain.slots import generate_slots
-
-MOSCOW_TZ = ZoneInfo("Europe/Moscow")
+from app.domain.slots import MOSCOW_TZ, generate_slots
 
 router = APIRouter(prefix="/event-types", tags=["Event Types"])
 
@@ -103,7 +100,8 @@ def get_slots(
             404, "event_type_not_found", f"Event type {event_type_id} not found"
         )
 
-    today = datetime.now(MOSCOW_TZ).date()
+    now = datetime.now(MOSCOW_TZ)
+    today = now.date()
     from_val = from_date if from_date is not None else today
     to_val = to_date if to_date is not None else today + timedelta(days=14)
 
@@ -111,7 +109,6 @@ def get_slots(
     window_end = datetime.combine(to_val, datetime.min.time(), tzinfo=MOSCOW_TZ) + timedelta(days=1)
 
     bookings = booking_repo.list_by_range(window_start, window_end)
-    now = datetime.now(MOSCOW_TZ)
 
     slots = generate_slots(et, from_val, to_val, bookings, now)
     return JSONResponse(

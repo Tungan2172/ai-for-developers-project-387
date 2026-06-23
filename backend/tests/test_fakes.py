@@ -1,6 +1,6 @@
 from datetime import UTC, datetime, timedelta
 
-from app.domain.models import Booking, EventType
+from app.domain.models import Booking, Owner
 from tests.fake_owner import FakeOwnerRepository
 from tests.fakes import FakeBookingRepository, FakeEventTypeRepository
 
@@ -166,10 +166,6 @@ def test_has_overlap() -> None:
 def test_fake_owner() -> None:
     repo = FakeOwnerRepository()
     assert repo.get() is None
-    owner = EventType(id=1, title="o", description="d", duration_minutes=0)
-    _ = owner
-    from app.domain.models import Owner
-
     o = Owner(name="owner", title="Host", description="desc")
     saved = repo.save(o)
     assert saved.name == "owner"
