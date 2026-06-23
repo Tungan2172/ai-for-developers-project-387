@@ -112,6 +112,16 @@ make migrate / seed  Alembic / сид владельца (с B1)
 
 uv ставится в `~/.local/bin` (Makefile сам добавляет в PATH).
 
+## Интеграция AI-агента в цикл разработки
+
+Проект использует **opencode** для автоматизации цикла issue → PR:
+- `.github/workflows/opencode.yml` — AI-агент активируется по командам `/oc` или `/opencode` в issue/PR-комментариях
+- `.github/workflows/release-please.yml` — автоматический changelog и релизы из main
+- **Conventional Commits** (`feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:`) обязательны для корректной работы release-please
+- AI-агент создаёт коммиты, PRы и проходит code-review с пользователем
+
+Необходимый секрет в GitHub: `OPENCODE_API_KEY` (для запуска opencode.yml).
+
 ## Карта этапов
 
 - [x] **S0a** — TypeSpec-контракт (PR #1, смержён).
