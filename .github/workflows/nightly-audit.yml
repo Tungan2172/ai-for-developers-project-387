@@ -2,7 +2,7 @@ name: nightly-audit
 
 on:
   schedule:
-    - cron: '45 22 * * 1-5'
+    - cron: '00 23 * * 1-5'
   workflow_dispatch:
 
 jobs:
