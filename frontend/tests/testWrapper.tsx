@@ -1,0 +1,26 @@
+import { MantineProvider } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { PropsWithChildren } from 'react';
+import { MemoryRouter } from 'react-router';
+
+import { RoleProvider } from '../src/RoleContext.tsx';
+
+export function createTestWrapper(initialEntries?: string[], initialAdmin = false) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+    },
+  });
+
+  return function TestWrapper({ children }: PropsWithChildren) {
+    return (
+      <MemoryRouter initialEntries={initialEntries}>
+        <QueryClientProvider client={queryClient}>
+          <MantineProvider>
+            <RoleProvider initialAdmin={initialAdmin}>{children}</RoleProvider>
+          </MantineProvider>
+        </QueryClientProvider>
+      </MemoryRouter>
+    );
+  };
+}
