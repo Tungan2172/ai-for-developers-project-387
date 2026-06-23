@@ -2,7 +2,7 @@ name: nightly-audit
 
 on:
   schedule:
-    - cron: '45 21 * * 1-5'
+    - cron: '05 22 * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -106,39 +106,33 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           REPORT_FILE="lighthouse-report/report.report.json"
-          if [ -f "$REPORT_FILE" ]; then
-            PERF=$(jq '.categories.performance.score * 100' "$REPORT_FILE")
-            ACC=$(jq '.categories.accessibility.score * 100' "$REPORT_FILE")
-            BP=$(jq '.categories."best-practices".score * 100' "$REPORT_FILE")
-            SEO=$(jq '.categories.seo.score * 100' "$REPORT_FILE")
+          [ -f "$REPORT_FILE" ] || exit 0
 
+          PERF=$(jq '.categories.performance.score * 100' "$REPORT_FILE")
+          ACC=$(jq '.categories.accessibility.score * 100' "$REPORT_FILE")
+          BP=$(jq '.categories."best-practices".score * 100' "$REPORT_FILE")
+          SEO=$(jq '.categories.seo.score * 100' "$REPORT_FILE")
+
+          cat > /tmp/audit-body.md <<- BODYEOF
+          ## Nightly Audit Report
+
+          ### Lighthouse Scores
+          | Metric | Score |
+          |---|---|
+          | Performance | ${PERF} / 100 |
+          | Accessibility | ${ACC} / 100 |
+          | Best Practices | ${BP} / 100 |
+          | SEO | ${SEO} / 100 |
+
+          ### E2E Tests
+          » [Download e2e report](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})
+          BODYEOF
+
+          if ! gh issue create \
+            --title "Nightly Audit $(date -u +%F)" \
+            --label "audit" \
+            --body-file /tmp/audit-body.md 2>/dev/null; then
             gh issue create \
               --title "Nightly Audit $(date -u +%F)" \
-              --label "audit" \
-              --body "## Nightly Audit Report
-
-### Lighthouse Scores
-| Metric | Score |
-|---|---|
-| Performance | ${PERF} / 100 |
-| Accessibility | ${ACC} / 100 |
-| Best Practices | ${BP} / 100 |
-| SEO | ${SEO} / 100 |
-
-### E2E Tests
-» [Download e2e report](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})" 2>/dev/null || \
-            gh issue create \
-              --title "Nightly Audit $(date -u +%F)" \
-              --body "## Nightly Audit Report
-
-### Lighthouse Scores
-| Metric | Score |
-|---|---|
-| Performance | ${PERF} / 100 |
-| Accessibility | ${ACC} / 100 |
-| Best Practices | ${BP} / 100 |
-| SEO | ${SEO} / 100 |
-
-### E2E Tests
-» [Download e2e report](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
+              --body-file /tmp/audit-body.md
           fi
