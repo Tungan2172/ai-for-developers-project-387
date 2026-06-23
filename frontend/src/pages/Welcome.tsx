@@ -48,7 +48,7 @@ export function Welcome() {
                   isAdmin
                     ? undefined
                     : () => {
-                        void navigate(`/event-types/${String(et.id)}`);
+                        void navigate(`/event-types/${String(et.id)}/book`);
                       }
                 }
                 style={{ cursor: isAdmin ? 'default' : 'pointer' }}
