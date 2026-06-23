@@ -86,7 +86,7 @@ docker-compose.yml, Makefile   — в корне
 - **Ветка на этап**, PR через `gh`, **обычный merge без squash**.
 - Коммиты по типам: `feat: ...` (реализация), затем `test: ...` (тесты),
   `chore:`/`docs:`/`ci:` по смыслу. AGENTS.md — отдельным коммитом.
-- Git identity (локально): `Tungan2172 <Tungan2172@users.noreply.github.com>`.
+- Git identity: `opencode[bot] <41898282+opencode[bot]@users.noreply.github.com>`.
 - CI — `ci.yml` (lint+test+contract). Файл `.github/workflows/hexlet-check.yml`
   НЕ редактировать.
 - `makets/` (макеты фронта) — в `.gitignore`, не коммитим.
