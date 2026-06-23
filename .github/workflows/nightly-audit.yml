@@ -1,0 +1,144 @@
+name: nightly-audit
+
+on:
+  schedule:
+    - cron: '45 21 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: scheduler
+          POSTGRES_PASSWORD: scheduler
+          POSTGRES_DB: scheduler
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready -U scheduler
+          --health-interval 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Install frontend deps
+        run: cd frontend && npm ci
+
+      - name: Build frontend
+        run: cd frontend && npm run build
+
+      - name: Install backend deps
+        run: cd backend && uv sync
+
+      - name: Start backend
+        working-directory: backend
+        run: |
+          APP_DATABASE_URL=postgresql+psycopg://scheduler:scheduler@localhost:5432/scheduler \
+          nohup ./entrypoint.sh > /tmp/backend.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
+              echo "Backend ready"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Start frontend
+        working-directory: frontend
+        run: |
+          VITE_E2E=true nohup npm run dev > /tmp/frontend.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:5173 > /dev/null 2>&1; then
+              echo "Frontend ready"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Install Playwright browsers
+        working-directory: frontend
+        run: npx playwright install chromium
+
+      - name: Run e2e tests
+        working-directory: frontend
+        run: npx playwright test
+        env:
+          APP_DATABASE_URL: postgresql+psycopg://scheduler:scheduler@localhost:5432/scheduler
+        continue-on-error: true
+
+      - name: Upload e2e results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: frontend/playwright-report/
+
+      - name: Run Lighthouse audit
+        run: |
+          mkdir -p lighthouse-report
+          npx lighthouse http://localhost:5173 \
+            --output=html --output=json \
+            --output-path=./lighthouse-report/report \
+            --chrome-flags="--headless --no-sandbox" \
+            --quiet 2>/dev/null || true
+        continue-on-error: true
+
+      - name: Upload Lighthouse report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: lighthouse-report/
+
+      - name: Create audit issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPORT_FILE="lighthouse-report/report.report.json"
+          if [ -f "$REPORT_FILE" ]; then
+            PERF=$(jq '.categories.performance.score * 100' "$REPORT_FILE")
+            ACC=$(jq '.categories.accessibility.score * 100' "$REPORT_FILE")
+            BP=$(jq '.categories."best-practices".score * 100' "$REPORT_FILE")
+            SEO=$(jq '.categories.seo.score * 100' "$REPORT_FILE")
+
+            gh issue create \
+              --title "Nightly Audit $(date -u +%F)" \
+              --label "audit" \
+              --body "## Nightly Audit Report
+
+### Lighthouse Scores
+| Metric | Score |
+|---|---|
+| Performance | ${PERF} / 100 |
+| Accessibility | ${ACC} / 100 |
+| Best Practices | ${BP} / 100 |
+| SEO | ${SEO} / 100 |
+
+### E2E Tests
+» [Download e2e report](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})" 2>/dev/null || \
+            gh issue create \
+              --title "Nightly Audit $(date -u +%F)" \
+              --body "## Nightly Audit Report
+
+### Lighthouse Scores
+| Metric | Score |
+|---|---|
+| Performance | ${PERF} / 100 |
+| Accessibility | ${ACC} / 100 |
+| Best Practices | ${BP} / 100 |
+| SEO | ${SEO} / 100 |
+
+### E2E Tests
+» [Download e2e report](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
+          fi
