@@ -36,9 +36,6 @@ frontend/dist/
 .vscode/
 .DS_Store
 
-# opencode
-.opencode/
-
 # Hypothesis cache (schemathesis)
 .hypothesis/
 
