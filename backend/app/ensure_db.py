@@ -20,7 +20,7 @@ def ensure_db() -> None:
                     IF NOT EXISTS (
                         SELECT 1 FROM pg_constraint WHERE conname = 'bookings_exclude'
                     ) THEN
-                        ALTER TABLE bookings ADD EXCLUDE USING gist (
+                        ALTER TABLE bookings ADD CONSTRAINT bookings_exclude EXCLUDE USING gist (
                             tstzrange(start, "end", '[)') WITH &&
                         );
                     END IF;
